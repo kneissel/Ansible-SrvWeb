@@ -1,0 +1,28 @@
+- name: Install the nginx package
+  apt: name=nginx-full state=present update_cache=yes
+
+- name: Make sure the sites-available, sites-enabled and conf.d directories exist
+  file: path=/etc/nginx/{{ item }} state=directory owner=root group=root mode=0755
+  with_items:
+    - "sites-available"
+    - "sites-enabled"
+    - "conf.d"
+
+- name: copy ssl certificats
+  copy:
+    src: /root/ssl
+    dest: {{ web_user_home_dir }}
+    remote_src: yes
+
+
+- name: Download config file
+  action: template src=templates/server.conf dest=/etc/nginx/sites-available/server.conf
+
+- name: Generate Diffie-Hellman parameters with the default size (4096 bits)
+  openssl_dhparam:
+    path: {{ web_user_home_dir }}/ssl/dhparams.pem
+
+- name: Enable the nginx default site
+  file: path=/etc/nginx/sites-enabled/server.conf state=link src=/etc/nginx/sites-available/server.conf
+  notify:
+   - restart nginx

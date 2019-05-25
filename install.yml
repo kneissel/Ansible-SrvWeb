@@ -1,0 +1,12 @@
+- name: Install and configuration of Nginx, PHP-FPM, MARIADB 
+  hosts: localhost
+  gather_facts: False
+
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - common
+    - php-fpm
+    - mariadb
+    - nginx
