@@ -1,52 +1,38 @@
 - name: install php packages
-  apt: name="{{ item }}" update_cache=yes state=latest
-  with_items:
-    - php7.2
-    - php7.2-bcmath
-    - php7.2-common
-    - php7.2-curl
-    - php7.2-fpm
-    - php7.2-xml
-    - php7.2-gd
-    - php7.2-intl
-    - php7.2-json
-    - php7.2-mbstring
-    - php7.2-mysql
-    - php7.2-cli
-    - php7.2-readline
-    - php7.2-soap
-    - php7.2-opcache
-    - php7.2-zip
-    - php7.2-xsl
+  apt:
+   name: ['php8.2', 'php7.2-bcmath', 'php7.2-common', 'php7.2-curl', 'php7.2-fpm', 'php7.2-xml', 'php7.2-gd', 'php7.2-intl', 'php7.2-json', 'php7.2-mbstring', 'php7.2-mysql', 'php7.2-cli', 'php7.2-readline', 'php7.2-soap', 'php7.2-opcache', 'php7.2-zip', 'php-pear', 'php7.2-xsl', 'php7.2-dev']
+   update_cache: yes
+   state: latest
 
 - name: install mcrypt with pecl
   pear:
-    name: pecl/mcrypt
+    name: pecl/mcrypt-1.0.2
     state: latest
  
 - name: enable php7.2 mcrypt module
-  shell: php7.2enmod mcrypt
+  shell: phpenmod mcrypt
   args:
-    creates: /etc/php7.2/cli/conf.d/20-mcrypt.ini
+    creates: /etc/php/7.2/cli/conf.d/20-mcrypt.ini
 
 - name: Replace lines in conf files
   lineinfile:
      path: "{{ item.path }}"
      regexp: "{{ item.regexp1 }}"
      line: "{{ item.line }}"
-   with_items:
-     - { path: '/etc/php7.2/fpm/php.ini', regexp1: '^memory_limit', line: 'memory_limit = 1024M'}
-     - { path: '/etc/php7.2/fpm/php.ini', regexp1: '^max_execution_time', line: 'max_execution_time = 1800'}
-     - { path: '/etc/php7.2/fpm/php.ini', regexp1: '^zlib.output_compression', line: 'zlib.output_compression = On'}
-     - { path: '/etc/php7.2/fpm/php.ini', regexp1: '^;cgi.fix_pathinfo', line: 'cgi.fix_pathinfo = 0'}
-     - { path: '/etc/php7.2/cli/php.ini', regexp1: '^memory_limit', line: 'memory_limit = 1024M'}
-     - { path: '/etc/php7.2/cli/php.ini', regexp1: '^max_execution_time', line: 'max_execution_time = 1800'}
-     - { path: '/etc/php7.2/cli/php.ini', regexp1: '^zlib.output_compression', line: 'zlib.output_compression = On'}
-     - { path: '/etc/php7.2/cli/php.ini', regexp1: '^;cgi.fix_pathinfo', line: 'cgi.fix_pathinfo = 0'}
-     - { path: '/etc/php7.2/fpm/conf.d/05-opcache.ini', regexp1: '^opcache.memory_consumption', line: 'opcache.memory_consumption = 512MB'}
-     - { path: '/etc/php7.2/fpm/conf.d/05-opcache.ini', regexp1: '^opcache.max_accelerated_files', line: 'opcache.max_accelerated_files = 60000'}
-     - { path: '/etc/php7.2/fpm/conf.d/05-opcache.ini', regexp1: '^opcache.consistency_checks', line: 'opcache.consistency_checks = 0'}
-     - { path: '/etc/php7.2/fpm/conf.d/05-opcache.ini', regexp1: '^opcache.validate_timestamps', line: 'opcache.validate_timestamps = 0'}
-     - { path: '/etc/php7.2/fpm/conf.d/05-opcache.ini', regexp1: '^opcache.enable_cli', line: 'opcache.enable_cli = 1'}
-   notify:
+  with_items:
+     - { path: '/etc/php/7.2/fpm/php.ini', regexp1: '^memory_limit', line: 'memory_limit = 1024M'}
+     - { path: '/etc/php/7.2/fpm/php.ini', regexp1: '^max_execution_time', line: 'max_execution_time = 1800'}
+     - { path: '/etc/php/7.2/fpm/php.ini', regexp1: '^zlib.output_compression', line: 'zlib.output_compression = On'}
+     - { path: '/etc/php/7.2/fpm/php.ini', regexp1: '^;cgi.fix_pathinfo', line: 'cgi.fix_pathinfo = 0'}
+     - { path: '/etc/php/7.2/cli/php.ini', regexp1: '^memory_limit', line: 'memory_limit = 1024M'}
+     - { path: '/etc/php/7.2/cli/php.ini', regexp1: '^max_execution_time', line: 'max_execution_time = 1800'}
+     - { path: '/etc/php/7.2/cli/php.ini', regexp1: '^zlib.output_compression', line: 'zlib.output_compression = On'}
+     - { path: '/etc/php/7.2/cli/php.ini', regexp1: '^;cgi.fix_pathinfo', line: 'cgi.fix_pathinfo = 0'}
+     - { path: '/etc/php/7.2/fpm/conf.d/10-opcache.ini', regexp1: '^opcache.memory_consumption', line: 'opcache.memory_consumption = 512MB'}
+     - { path: '/etc/php/7.2/fpm/conf.d/10-opcache.ini', regexp1: '^opcache.max_accelerated_files', line: 'opcache.max_accelerated_files = 60000'}
+     - { path: '/etc/php/7.2/fpm/conf.d/10-opcache.ini', regexp1: '^opcache.consistency_checks', line: 'opcache.consistency_checks = 0'}
+     - { path: '/etc/php/7.2/fpm/conf.d/10-opcache.ini', regexp1: '^opcache.validate_timestamps', line: 'opcache.validate_timestamps = 0'}
+     - { path: '/etc/php/7.2/fpm/conf.d/10-opcache.ini', regexp1: '^opcache.enable_cli', line: 'opcache.enable_cli = 1'}
+
+  notify:
      - restart php7.2-fpm

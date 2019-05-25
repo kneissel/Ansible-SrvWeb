@@ -8,20 +8,18 @@
     - "sites-enabled"
     - "conf.d"
 
-- name: copy ssl certificats
-  copy:
-    src: /root/ssl
-    dest: "{{ web_user_home_dir }}"
-    remote_src: yes
+- name: Copy ssl certificats
+  command: cp -a /root/ssl "{{ web_user_home_dir }}"
 
 - name: Download config file
   action: template src=templates/server.conf dest=/etc/nginx/sites-available/server.conf
 
-- name: Generate Diffie-Hellman parameters with the default size (4096 bits)
+- name: Generate Diffie-Hellman parameters
   openssl_dhparam:
-    path: "{{ web_user_home_dir }}"/ssl/dhparams.pem
+    path: '{{ web_user_home_dir }}/ssl/dhparams.pem'
 
 - name: Enable the nginx default site
   file: path=/etc/nginx/sites-enabled/server.conf state=link src=/etc/nginx/sites-available/server.conf
+
   notify:
    - restart nginx
