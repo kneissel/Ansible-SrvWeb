@@ -31,6 +31,17 @@
 - name: Removes the test database
   mysql_db: login_user=root login_password="{{ db_root_passwd }}" db=test state=absent
 
+- name: Replace lines in conf files
+  lineinfile:
+     path: /etc/mysql/mysql.conf.d/mysqld.cnf
+     regexp: "{{ item.regexp1 }}"
+     line: "{{ item.line }}"
+  with_items:
+     - { regexp1: '^innodb_buffer_pool_instances', line: 'innodb_buffer_pool_instances = 8'}
+     - { regexp1: '^innodb_buffer_pool_size', line: 'innodb_buffer_pool_size = 1024MB'}
+     - { regexp1: '^max_connections', line: 'max_connections = 1000'}
+     - { regexp1: '^innodb-thread-concurrency', line: 'innodb-thread-concurrency = 36'}
+
 - name: Create a new database'
   mysql_db: login_user=root login_password="{{ db_root_passwd }}" db="{{ db_name }}" state=present
 
