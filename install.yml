@@ -1,5 +1,5 @@
 - name: Install and configuration of Nginx, PHP-FPM, MYSQL
-  hosts: localhost
+  hosts: all
   gather_facts: False
 
   vars_files:
