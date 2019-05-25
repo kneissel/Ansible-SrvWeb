@@ -1,8 +1,5 @@
-- name: Install some package
-  apt:
-    name: ['python-minimal', 'libmcrypt-dev']
-    state: present
-    update_cache: yes
+- name: Install libmcrypt-dev
+    apt: name=libmcrypt-dev state=present update_cache=yes
 
 - name: Create www root directory
   file:
