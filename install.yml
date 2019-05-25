@@ -1,4 +1,4 @@
-- name: Install and configuration of Nginx, PHP-FPM, MARIADB 
+- name: Install and configuration of Nginx, PHP-FPM, MYSQL
   hosts: localhost
   gather_facts: False
 
@@ -8,5 +8,5 @@
   roles:
     - common
     - php-fpm
-    - mariadb
+    - mysql
     - nginx
