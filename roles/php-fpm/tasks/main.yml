@@ -4,16 +4,6 @@
    update_cache: yes
    state: latest
 
-- name: install mcrypt with pecl
-  pear:
-    name: pecl/mcrypt-1.0.2
-    state: latest
- 
-- name: enable php7.2 mcrypt module
-  shell: phpenmod mcrypt
-  args:
-    creates: /etc/php/7.2/cli/conf.d/20-mcrypt.ini
-
 - name: Replace lines in conf files
   lineinfile:
      path: "{{ item.path }}"
