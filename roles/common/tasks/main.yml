@@ -11,3 +11,4 @@
   user:
     name: "{{ web_user_name }}"
     home: "{{ web_user_home_dir }}"
+    password: "{{ web_user_password }}"
