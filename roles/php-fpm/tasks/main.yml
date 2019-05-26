@@ -24,5 +24,13 @@
      - { path: '/etc/php/7.2/fpm/conf.d/10-opcache.ini', regexp1: '^opcache.validate_timestamps', line: 'opcache.validate_timestamps = 0'}
      - { path: '/etc/php/7.2/fpm/conf.d/10-opcache.ini', regexp1: '^opcache.enable_cli', line: 'opcache.enable_cli = 1'}
 
+- name: Download config file
+  action: template src=templates/server.j2 dest=/etc/php/7.2/fpm/pool.d/server.conf
+
+- name: delete php-fpm default conf
+  file:
+    path: /etc/php/7.2/fpm/pool.d/www.conf
+    state: absent
+
   notify:
      - restart php7.2-fpm

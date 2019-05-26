@@ -10,5 +10,4 @@
 - name: Add user
   user:
     name: "{{ web_user_name }}"
-    group: "{{ web_user_group }}"
     home: "{{ web_user_home_dir }}"
